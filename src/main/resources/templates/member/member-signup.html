@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+    <div th:replace="member/header :: headerFragment"></div>
+    <form action="/member/create" method="post" enctype="application/x-www-form-urlencoded">
+        이름: <input type="text" name="name" id="name"><br>
+        이메일: <input type="text" name="email" id="email"><br>
+        비밀번호: <input type="text" name="password" id="password"><br>
+        <input type="submit" value="제출">
+<!--        <button type="button" onclick="postData()">제출</button>-->
+    </form>
+</body>
+</html>

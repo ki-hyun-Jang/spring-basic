@@ -2,8 +2,8 @@ package com.beyond.basic.b1_hello.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor // 기본생성자
 @AllArgsConstructor // 모든 매개변수있는 생성자
@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class Hello {
     private String name;
     private String email;
+//    private MultipartFile photo;
 }

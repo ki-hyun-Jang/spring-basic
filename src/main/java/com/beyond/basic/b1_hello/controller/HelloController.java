@@ -1,12 +1,14 @@
 package com.beyond.basic.b1_hello.controller;
 
 import com.beyond.basic.b1_hello.domain.Hello;
+import com.beyond.basic.b1_hello.domain.StrudentReqDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.SQLOutput;
+import java.util.List;
 
 // Component 어노테이션을 통해 별도의 객체를 생성할 필요가 없는 싱글톤 객체 생성
 // Controller 어노테이션을 통해 쉽게 사용자의 http 요청을 처리하고, http 응답을 줄 수 있음.
@@ -84,11 +86,130 @@ public class HelloController {
 //    case8. pathvariable 방식을 통해 사용자로부터 값을 받아 화면 return
 //    형식: /hello/model/path/1
 //    예시: /author/detail/1
-//    pathvariable방식은 url을 통해 자우너구조를 명확하게 표현할 때 사용.(좀 더 restful한 방식)
+//    pathvariable방식은 url을 통해 자원구조를 명확하게 표현할 때 사용.(좀 더 restful한 방식)
     @GetMapping("/model-path/{inputName}")
     public String modelPath(@PathVariable String inputName,
                             Model model){
         model.addAttribute("modelName",inputName);
         return "helloworld2";
     }
+
+    @GetMapping("/form-view")
+//    사용자에게 name, email을 입력할 수 있는 화면을 주는 메서드 정의
+    public String formView(){
+        return "form-view";
+    }
+
+//    case1. form 데이터 형식의 post 요청 처리(텍스트만 있는 application/x-www ~)
+//    형식: ?name=xxx&email=yyy 데이터가 body 에 들어옴
+    @PostMapping("/form-view")
+    @ResponseBody
+    public String formPost1(@ModelAttribute Hello hello){
+        System.out.println(hello);
+        return "ok";
+    }
+
+//    case2: form 데이터 형식의 post 요청 처리(file + text 형식)
+    @GetMapping("form-file-view")
+    public String formFileGet(){
+        return "form-file-view";
+    }
+
+    @ResponseBody
+    @PostMapping("form-file-view")
+    public String formFilePost(Hello hello, @RequestParam(value = "photo")MultipartFile photo){
+        System.out.println(hello);
+        System.out.println(photo.getOriginalFilename());
+        return "ok";
+    }
+
+//    case3. js를 통한 활용한 form데이터 전송(text만)
+    @GetMapping("/axios-form-view")
+    public String getFormText(){
+        return "axios-form-view";
+    }
+
+    @ResponseBody
+    @PostMapping("/axios-form-view")
+//    js를 통한 form형식도 마찬가지로 ?name=xxx&email=yyy
+    public String postFormText(Hello hello){
+        System.out.println(hello);
+        return "ok";
+    }
+
+//    case4. js를 활용한 form데이터 전송(text+file)
+    @GetMapping("/axios-form-file-view")
+    public String getFormFile(){
+        return "axios-form-file-view";
+    }
+
+    @ResponseBody
+    @PostMapping("/axios-form-file-view")
+    public String postFormFile(Hello hello, @RequestParam(value = "photo")MultipartFile photo){
+        System.out.println(hello);
+        System.out.println(photo.getOriginalFilename());
+        return "ok";
+    }
+
+//    case5. js를 활용한 form데이터 전송(text+멀티 file)
+    @GetMapping("/axios-form-multi-file-view")
+    public String multiGetFormFile(){
+        return "axios-form-file-view";
+    }
+
+    @ResponseBody
+    @PostMapping("/axios-form-multi-file-view")
+    public String multiPostFormFile(Hello hello, @RequestParam(value = "photos") List<MultipartFile> photos){
+        System.out.println(hello);
+        for (int i =0; i< photos.size();i++){
+            System.out.println(photos.get(i).getOriginalFilename());
+        }
+        return "ok";
+    }
+
+//    case6.js를 활용한 json 데이터 전송
+//    형식: {name:"hongildong, email:"hongildong@naver.com"}
+    @GetMapping("axios-json-view")
+    public String axiosView(){
+        return "axios-json-view";
+    }
+
+    @PostMapping("axios-json-view")
+    @ResponseBody
+    public String axiosJsonViewPost(@RequestBody Hello hello){
+        System.out.println(hello);
+        return "OK";
+    }
+
+//    case7. 중첩된 JSON 데이터처리
+//    예시 데이터 (Student 객체) {name: "hongildong", email:"hong@naver.com", scores:[{math:60}, {music:70}, {english:60}]}
+    @GetMapping("/axios-nested-json-view")
+    public String axiosNestedJsonView(){
+        return "axios-nested-json-view";
+    }
+
+    @PostMapping("/axios-nested-json-view")
+    @ResponseBody
+    public String axiosNestedJsonViewPost(@RequestBody StrudentReqDto strudentReqDto){
+        System.out.println(strudentReqDto.getName());
+        System.out.println(strudentReqDto.getEmail());
+        System.out.println();
+        return "OK";
+    }
+
+//    case8. json과 file처리
+//    file처리는 기본적으로 form형식을 통해 처리
+//    그래서, json과 file을 동시에 처리하려면 form형식안에 json과 파일을 넣어 처리
+    @GetMapping("/axios-json-file-view")
+    public String axiosJsonFileView(){
+        return "axios-json-file-view";
+    }
+
+    @PostMapping("/axios-json-file-view")
+    @ResponseBody
+    public String axiosJsonFileViewPost(){
+
+        return "ok";
+    }
+
 }

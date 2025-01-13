@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>form 입력</title>
+</head>
+<body>
+<!-- form 형식의 경우 ?name=xxx&email=yyy 형식의 parameter 방식-->
+    <form action="http://localhost:8080/hello/axios-form-multi-file-view" method="post" enctype="multipart/form-data">
+        이름: <input type="text" name="name" id="name">
+        이메일: <input type="text" name="email" id="email">
+        사진: <input type="file" name="photos" accept="image/*" multiple>
+        <button type="button" onclick="postData()">제출</button>
+    </form>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        async function postData(){
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const fileInput = document.getElementById("photos");
+            const files = fileInput.files;
+            const serverData = new FormData();
+            serverData.append('name', name);
+            serverData.append('email', email);
+            for(let i = 0; i<files.length; i++){
+                serverData.append('photos',files[i])
+            }
+            const result = await axios.post("http://localhost:8080/hello/axios-form-multi-file-view", serverData);
+            console.log(result.data);
+    }
+    </script>
+</body>
+</html>
