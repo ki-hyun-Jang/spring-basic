@@ -10,20 +10,9 @@
 <body>
 <div th:replace="member/header :: headerFragment"></div>
 <table>
-  <thead>
-  <tr>
-    <th>id</th>
-    <th>이름</th>
-    <th>이메일</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td th:text="${modelId}"></td>
-    <td>꼬춘혁</td>
-    <td>small@naver.com</td>
-  </tr>
-  </tbody>
+  <tr><td>name</td><td th:text="${member.name}"></td></tr>
+  <tr><td>email</td><td th:text="${member.email}"></td></tr>
+  <tr><td>password</td><td th:text="${member.password}"></td></tr>
 </table>
 </body>
 </html>

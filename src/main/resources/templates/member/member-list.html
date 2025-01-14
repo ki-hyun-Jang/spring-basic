@@ -18,6 +18,7 @@
                 <td th:text="${member.id}"></td>
                 <td th:text="${member.name}"></td>
                 <td th:text="${member.email}"></td>
+                <td><a th:href="@{/member/detail/{id}(id=${member.id})}">상세조회</a></td>
             </tr>
         </tbody>
     </table>
