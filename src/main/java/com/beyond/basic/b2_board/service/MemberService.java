@@ -4,23 +4,25 @@ import com.beyond.basic.b2_board.domain.Member;
 import com.beyond.basic.b2_board.dtos.MemberCreateDto;
 import com.beyond.basic.b2_board.dtos.MemberDetailDto;
 import com.beyond.basic.b2_board.dtos.MemberListRes;
-import com.beyond.basic.b2_board.repository.MemberJdbcRepository;
+import com.beyond.basic.b2_board.dtos.MemberUpdatePasswordDto;
+import com.beyond.basic.b2_board.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
-// 아래 어노테이션을 통해, 모든 메서드에 트랜잭션을 적용하고, 만약 예외(uncheck)가 발생 시 롤백처리 자동화
+// 아래 어노테이션을 통해, 모든 메서드에 트랜잭션을 적용하고, 만약 예외(unchecked)가 발생 시 롤백처리 자동화
 // 롤백은 uncheck
 @Transactional
 public class MemberService {
 
     @Autowired
-    private MemberJdbcRepository memberRepository;
+    private MemberRepository memberRepository;
 
     public List<MemberListRes> findAll(){
 //        List<Member> members = memberRepository.findAll();
@@ -52,6 +54,14 @@ public class MemberService {
         return memberRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException())
                 .detailFromEntity();
+    }
 
+    public void memberUpdatePassword(MemberUpdatePasswordDto memberUpdatePasswordDto){
+        String email = memberUpdatePasswordDto.getEmail();
+        String pw = memberUpdatePasswordDto.getPassword();
+        Member member = memberRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("없는 사용자임"));
+        member.updatePw(pw);
+//        기존 객체를 조회 후에 다시 save할 경우에는 insert가 아니라 update 쿼리실행
+        memberRepository.save(member);
     }
 }

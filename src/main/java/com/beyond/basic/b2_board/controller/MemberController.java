@@ -1,5 +1,6 @@
 package com.beyond.basic.b2_board.controller;
 
+import com.beyond.basic.b2_board.domain.Member;
 import com.beyond.basic.b2_board.dtos.MemberCreateDto;
 import com.beyond.basic.b2_board.dtos.MemberDetailDto;
 import com.beyond.basic.b2_board.dtos.MemberListRes;
@@ -86,6 +87,6 @@ public class MemberController {
             return "member/member-error";
         }
         return "redirect:/member/list";
-
     }
+
 }
