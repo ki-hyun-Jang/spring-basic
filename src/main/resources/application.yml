@@ -24,10 +24,11 @@ spring:
 
 #    ddl문 자동생성. 테이블은 자동(생성)반영 해주나, 스키마는 반드시 사전에 생성필요
     generate-ddl: true
+#    jpa는 인터페이스고, hibernate가 구현체(실질적인 기능 구현)
     hibernate:
 #      create: 매번 table을 drop한 후 재생성
 #      update: entity 변경사항만 alter를 적용하고 기존 데이터 유지 (모든 변경사항을 alter하는 것은 아님)
-#      validate: 실제 DB와 차이점을 콘솔로그만 출력
+#      validate: 실제 DB와 차이점을 콘솔로그만 출력 (컬럼의 추가 정도만 반영)
       ddl-auto: update
 #      show_sql은 ddl, dml문을 출력하여 보여주는 옵션
     show_sql: true

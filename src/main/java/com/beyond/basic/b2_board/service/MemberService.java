@@ -47,21 +47,39 @@ public class MemberService {
         memberRepository.save(memberCreateDto.toEntity());
     }
 
+    public Member save2(MemberCreateDto memberCreateDto) throws Exception{
+        String email = memberCreateDto.getEmail();
+        String password = memberCreateDto.getPassword();
+        if(password.length() < 8 ){
+            throw new Exception("비밀번호가 너무 짧습니다. 8자리 이상으로 설정해주세요.");
+        } else if (memberRepository.findByEmail(email).isPresent()) {
+            throw new Exception("이미 존재하는 이메일입니다.");
+        }
+        Member member = memberRepository.save(memberCreateDto.toEntity());
+        return member;
+
+    }
+
     public MemberDetailDto findById(Long id) throws NoSuchElementException, RuntimeException{
 //        Optional<Member> optionalMember = memberRepository.findById(id);
 //        Member member = optionalMember.orElseThrow(()-> new NoSuchElementException("없는 아이디입니다."));
 //        return member.detailFromEntity();
         return memberRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException())
+                .orElseThrow(()-> new EntityNotFoundException("없는 ID입니다."))
                 .detailFromEntity();
     }
 
     public void memberUpdatePassword(MemberUpdatePasswordDto memberUpdatePasswordDto){
         String email = memberUpdatePasswordDto.getEmail();
         String pw = memberUpdatePasswordDto.getPassword();
-        Member member = memberRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("없는 사용자임"));
+        Member member = memberRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("없는 사용자입니다."));
         member.updatePw(pw);
 //        기존 객체를 조회 후에 다시 save할 경우에는 insert가 아니라 update 쿼리실행
         memberRepository.save(member);
+    }
+
+    public void delete(Long id){
+        Member member = memberRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("없는 id입니다."));
+        memberRepository.delete(member);
     }
 }
